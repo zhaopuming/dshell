@@ -1,0 +1,11 @@
+{
+	"name": "dshell",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2014, zhaopuming",
+	"authors": ["zhaopuming"],
+	"dependencies": {
+		"sdlang-d": ">=0.8.4",
+		"scriptlike" : ">=0.6.0",
+		"linenoise" : "~master"
+	}
+}

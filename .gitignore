@@ -1,0 +1,7 @@
+servers.sdl
+config.sdl
+__test__library__
+dshell
+.dub
+dub.userprefs
+history.txt
