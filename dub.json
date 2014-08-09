@@ -1,6 +1,6 @@
 {
 	"name": "dshell",
-	"description": "A minimal D application.",
+	"description": "An MVC based shell programming library in D.",
 	"copyright": "Copyright © 2014, zhaopuming",
 	"license": "MIT",
 	"authors": ["zhaopuming"],
