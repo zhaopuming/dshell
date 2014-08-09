@@ -4,20 +4,29 @@ import std.datetime;
 import scriptlike;
 
 
-struct Server {
-public: // TODO: make Server immutable
-	string name;
-	string ip;
-	string user;
-	int port;
-	string pwd;
-	string type;
+class Server
+{
+	public {
+		string name;
+		string ip;
+		string user;
+		string pwd;
+		string port;
+		string type;
+	}
 	
 public:
+	
 	@property bool isPwd() pure nothrow const
 	{
 		import std.string: empty;
 		return pwd.empty;
+	}
+	
+	@property override string toString()
+	{
+		import dshell.util.string;
+		return name ~ "." ~ type ~ " = " ~ (user ~ ":".ltick(pwd)).rtick("@") ~ ip ~ ":".ltick(port);
 	}
 }
 
@@ -37,7 +46,7 @@ string ssh(ref in Server server, string cmd) pure nothrow
 {
 	// sshpass -p '{passwd}' ssh -p {port} {user}@{ip} {cmd}
 	string sshpass = server.sshpass;
-	string stmt = "ssh -p " ~ server.port.safeToString ~ " " ~ server.user ~ "@" ~ server.ip ~ " '" ~ cmd ~ "'"; 
+	string stmt = "ssh -p " ~ server.port~ " " ~ server.user ~ "@" ~ server.ip ~ " '" ~ cmd ~ "'"; 
 	return stmt;
 }
 
@@ -48,7 +57,7 @@ string rsyncUp(ref in Server server, string src, string dest)  pure nothrow
 {
 	string sshpass = server.isPwd ? `sshpass -p "`~server.pwd~`" `: "";
 	// TODO: --delete?
-	string stmt = `rsync --delete --rsh='`~sshpass~` ssh -p `~server.port.safeToString~`' -CavuzLm `~src~` `~server.user~`@`~server.ip~`:`~dest;
+	string stmt = `rsync --delete --rsh='`~sshpass~` ssh -p `~server.port~`' -CavuzLm `~src~` `~server.user~`@`~server.ip~`:`~dest;
 	return stmt;
 }
 
@@ -58,7 +67,7 @@ string rsyncUp(ref in Server server, string src, string dest)  pure nothrow
 string rsyncDown(ref in Server server, string src, string dest)
 {
 	string sshpass = server.isPwd ? "" : `sshpass -p "`~server.pwd~`" `;
-	string stmt = `rsync --rsh='`~sshpass~` ssh -p `~server.port.safeToString~`' -CavuzLm `~server.user~`@`~server.ip~`:`~src~' '~dest;
+	string stmt = `rsync --rsh='`~sshpass~` ssh -p `~server.port~`' -CavuzLm `~server.user~`@`~server.ip~`:`~src~' '~dest;
 	return stmt;
 }
 
@@ -86,7 +95,7 @@ string safeToString(int n) pure nothrow
  **/
 string portStr(ref in Server server) pure nothrow
 {
-	if (server.port == 22) {
+	if (server.port == "22") {
 		return "";
 	} else {
 		import std.conv: to;
@@ -126,8 +135,8 @@ void batch(ref in Server server, string[] cmds...)
 void runAll(Server[] servers, string cmd)
 {
 	import std.concurrency: spawn;
-	foreach (ref Server server; servers) {
-		spawn(&run, server, cmd);
+	foreach (Server server; servers) {
+		spawn(&run, cast(immutable)server, cmd);
 	}
 	
 }

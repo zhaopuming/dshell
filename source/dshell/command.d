@@ -1,27 +1,10 @@
 ﻿module dshell.command;
 import std.stdio;
 
-import dshell.util.config;
-void process(string cmd, ConfigManager conf)
-{
-	import std.string: split, strip;
-	import std.algorithm: strip, map;
-	import std.array: array;
-	string[] args = cmd.split.map!((string x) => x.strip).array;
-	switch (args[0]) {
-		case "servers":
-			import std.array: join;
-			writeln(conf.servers.map!(x => x.toString).join("\n"));
-			break;
-		default:
-			import scriptlike: tryRun;
-			tryRun(cmd);
-			break;
-	}
-}
+import dshell.config;
+import std.logger;
 
 alias string delegate(string[]) Handler;
-
 class Command 
 {
 	immutable {
@@ -42,11 +25,34 @@ class Command
 	}
 }
 
-void execute(Handler handler)
+void execute(Handler handler, string[] args)
 {
 	import std.stdio;
-	writeln(handler(["Handler", "2"]));
+	writeln(handler(args));
 }
+
+void exec(inout Command cmd, string[] args)
+{
+	cmd.handler.execute(args);
+}
+
+void exec(Alias a, string[] args)
+{
+	a.root.exec(args);
+}
+
+
+class Alias : Command
+{
+	immutable Command root;
+
+	public this(string name, Command cmd)
+	{
+		super(name, cmd.handler);
+		this.root = cast(immutable)cmd;
+	}
+}
+
 
 unittest
 {
@@ -61,6 +67,4 @@ unittest
 	immutable c = a.freeze;
 	a.b.b = 7;
 	writeln(c.b.b);
-
-	
 }

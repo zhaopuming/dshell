@@ -6,6 +6,8 @@
 	"dependencies": {
 		"sdlang-d": ">=0.8.4",
 		"scriptlike" : ">=0.6.0",
+		"logger" : "0.2.6",
+		"colorize" : ">=1.0.5",
 		"linenoise" : "~master"
 	}
 }
