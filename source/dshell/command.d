@@ -1,6 +1,7 @@
 ﻿module dshell.command;
 import std.stdio;
 
+import dshell.global;
 import dshell.config;
 import std.logger;
 

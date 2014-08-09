@@ -2,7 +2,7 @@ import std.stdio, core.stdc.string, core.stdc.stdlib;
 import deimos.linenoise;
 
 import std.stdio;
-
+import dshell.global;
 
 extern(C) void completion(const char *buf, linenoiseCompletions *lc) {
 	if (buf[0] == 'h') {
