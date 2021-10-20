@@ -1,7 +1,7 @@
 Dshell
 ======
 
-A MVC based shell programming library in D. Helps you create interactive and colorful shell appications
+A MVC based shell programming library in D. Helps you create interactive and colorful shell applications
 
 
 TODO Features
